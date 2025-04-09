@@ -172,7 +172,7 @@ namespace Devdog.QuestSystemPro
             return questStates[quest.localIdentifier].completedQuests.Contains(quest);
         }
 
-        public void NotifyQuestTaskReachedTimeLimit(Task task, Quest quest)
+        public virtual void NotifyQuestTaskReachedTimeLimit(Task task, Quest quest)
         {
             OnQuestTaskReachedTimeLimit?.Invoke(task, quest);
         }

@@ -1,9 +1,8 @@
-﻿using System;
-using Devdog.General;
+﻿using Devdog.General;
 using Devdog.General.Localization;
 using Devdog.QuestSystemPro.UI;
+using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Devdog.QuestSystemPro
 {
@@ -51,7 +50,6 @@ namespace Devdog.QuestSystemPro
         /// </summary>
         public bool autoComplete = false;
 
-
         [NonSerialized]
         private float _progress;
         public float progress
@@ -61,9 +59,8 @@ namespace Devdog.QuestSystemPro
 
         public float progressNormalized
         {
-            get { return progress/progressCap; }
+            get { return progress / progressCap; }
         }
-
 
         [Header("Limits")]
         public bool useTimeLimit = false;
@@ -113,19 +110,16 @@ namespace Devdog.QuestSystemPro
             get { return _status; }
             protected set
             {
-                var before = _status;
+                TaskStatus before = _status;
                 _status = value;
 
                 if (before != _status)
                 {
-                    if(OnStatusChanged != null)
-                    {
-                        OnStatusChanged(before, _status, this);
-                    }
+                    OnStatusChanged?.Invoke(before, _status, this);
                 }
             }
         }
-        
+
         public bool isCompleted
         {
             get { return status == TaskStatus.Completed; }
@@ -140,8 +134,7 @@ namespace Devdog.QuestSystemPro
         /// 
         /// <b>The rewards of the over achievement are combined with the rewards from the task.</b>
         /// </summary>
-        public TaskOverAchievement[] overAchievements = new TaskOverAchievement[0];
-
+        public TaskOverAchievement[] overAchievements = Array.Empty<TaskOverAchievement>();
 
         [NonSerialized]
         private bool _gaveRewards;
@@ -151,15 +144,13 @@ namespace Devdog.QuestSystemPro
             protected set { _gaveRewards = value; }
         }
 
-
         /// <summary>
         /// The owner of this task (quest). Assigned at run-time.
         /// </summary>
         [IgnoreCustomSerialization]
         public virtual Quest owner { get; set; }
 
-
-//        [Obsolete("Use other constructors instead.")]
+        //        [Obsolete("Use other constructors instead.")]
         public Task()
         { }
 
@@ -186,15 +177,12 @@ namespace Devdog.QuestSystemPro
 
         public virtual bool SetProgress(float amount)
         {
-            var before = _progress;
+            float before = _progress;
             _progress = amount;
 
             if (Mathf.Approximately(before, _progress) == false)
             {
-                if (OnProgressChanged != null)
-                {
-                    OnProgressChanged(before, this);
-                }
+                OnProgressChanged?.Invoke(before, this);
             }
 
             if (autoComplete && IsProgressSufficientToComplete())
@@ -222,10 +210,7 @@ namespace Devdog.QuestSystemPro
 
         protected void NotifyReachedTimeLimit()
         {
-            if (OnReachedTimeLimit != null)
-            {
-                OnReachedTimeLimit(this);
-            }
+            OnReachedTimeLimit?.Invoke(this);
 
             owner.timeHandler.OnReachedTimeLimit(this);
         }
@@ -266,7 +251,9 @@ namespace Devdog.QuestSystemPro
                 {
                     StartTimer();
                 }
+
                 status = TaskStatus.Active;
+                OnActivate();
             }
             else if (status == TaskStatus.Completed)
             {
@@ -278,7 +265,7 @@ namespace Devdog.QuestSystemPro
         {
             if (gaveRewards == false)
             {
-                var s = CanGiveRewards();
+                ConditionInfo s = CanGiveRewards();
                 if (s == false)
                 {
                     return s;
@@ -309,7 +296,7 @@ namespace Devdog.QuestSystemPro
             }
 
             status = TaskStatus.Completed;
-            StopTimer();
+            OnComplete();
 
             if (giveRewardsOnTaskComplete)
             {
@@ -322,21 +309,19 @@ namespace Devdog.QuestSystemPro
 
         public virtual void NotifyQuestCompleted()
         {
-            
-//            Assert.AreEqual(QuestStatus.Completed, owner.status, "Quest status is not completed, yet Notify is called!");
+            // Assert.AreEqual(QuestStatus.Completed, owner.status, "Quest status is not completed, yet Notify is called!");
         }
 
         public virtual void Fail()
         {
-            if (status != TaskStatus.Completed)
-            {
-                status = TaskStatus.Failed;
-                StopTimer();
-            }
-            else
+            if (status == TaskStatus.Completed)
             {
                 DevdogLogger.Log("Trying to fail completed task. If you wish to start it again call SetProgress instead.");
+                return;
             }
+
+            status = TaskStatus.Failed;
+            OnFail();
         }
 
         public virtual ConditionInfo CanGiveRewards()
@@ -346,21 +331,21 @@ namespace Devdog.QuestSystemPro
                 return new ConditionInfo(false);
             }
 
-            foreach (var rewardGiver in rewardGivers)
+            foreach (IRewardGiver rewardGiver in rewardGivers)
             {
-                var s = rewardGiver.CanGiveRewards(owner);
+                ConditionInfo s = rewardGiver.CanGiveRewards(owner);
                 if (s == false)
                 {
                     return s;
                 }
             }
 
-            var overAchievement = GetCurrentOverAchievement();
+            TaskOverAchievement overAchievement = GetCurrentOverAchievement();
             if (overAchievement != null)
             {
-                foreach (var rewardGiver in overAchievement.rewardGivers)
+                foreach (IRewardGiver rewardGiver in overAchievement.rewardGivers)
                 {
-                    var s = rewardGiver.CanGiveRewards(owner);
+                    ConditionInfo s = rewardGiver.CanGiveRewards(owner);
                     if (s == false)
                     {
                         return s;
@@ -379,15 +364,15 @@ namespace Devdog.QuestSystemPro
             }
 
             gaveRewards = true;
-            foreach (var rewardGiver in rewardGivers)
+            foreach (IRewardGiver rewardGiver in rewardGivers)
             {
                 rewardGiver.GiveRewards(owner);
             }
 
-            var overAchievement = GetCurrentOverAchievement();
+            TaskOverAchievement overAchievement = GetCurrentOverAchievement();
             if (overAchievement != null)
             {
-                foreach (var rewardGiver in overAchievement.rewardGivers)
+                foreach (IRewardGiver rewardGiver in overAchievement.rewardGivers)
                 {
                     rewardGiver.GiveRewards(owner);
                 }
@@ -399,6 +384,7 @@ namespace Devdog.QuestSystemPro
         public virtual void Cancel()
         {
             ResetProgress();
+            OnCancel();
         }
 
         public bool IsOverAchieved()
@@ -410,7 +396,7 @@ namespace Devdog.QuestSystemPro
         {
             if (progressNormalized >= 1f)
             {
-                foreach (var overAchievement in overAchievements)
+                foreach (TaskOverAchievement overAchievement in overAchievements)
                 {
                     if (progress >= overAchievement.from && progress < overAchievement.to)
                     {
@@ -448,5 +434,32 @@ namespace Devdog.QuestSystemPro
 
             return "";
         }
+
+        /// <summary>
+        /// The startup method.
+        /// </summary>
+        protected virtual void OnActivate() { }
+
+        protected virtual void OnComplete()
+        {
+            StopTimer();
+            OnCleanUp();
+        }
+
+        protected virtual void OnFail()
+        {
+            StopTimer();
+            OnCleanUp();
+        }
+
+        protected virtual void OnCancel()
+        {
+            OnCleanUp();
+        }
+
+        /// <summary>
+        /// The teardown method.
+        /// </summary>
+        protected virtual void OnCleanUp() { }
     }
 }

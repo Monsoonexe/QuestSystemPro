@@ -3,7 +3,5 @@
     public interface INamedRewardGiver : IRewardGiver
     {
         string name { get; }
-
-        string ToString();
     }
 }

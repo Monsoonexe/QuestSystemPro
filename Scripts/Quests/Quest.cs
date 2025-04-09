@@ -435,11 +435,6 @@ namespace Devdog.QuestSystemPro
                 return new ConditionInfo(false);
             }
 
-            //            if (AreTasksCompletable() == false)
-            //            {
-            //                return new ConditionInfo(false, QuestManager.instance.languageDatabase.canNotCompleteQuestTasksAreNotCompleted);
-            //            }
-
             foreach (IQuestCondition condition in conditions)
             {
                 ConditionInfo c = condition.CanCompleteQuest(this);
@@ -451,10 +446,10 @@ namespace Devdog.QuestSystemPro
 
             foreach (Task task in tasks)
             {
-                ConditionInfo can = task.CanComplete();
-                if (can == false)
+                ConditionInfo c = task.CanComplete();
+                if (c == false)
                 {
-                    return can;
+                    return c;
                 }
             }
 
