@@ -1,32 +1,20 @@
-﻿using System;
-using Devdog.General;
-using Devdog.QuestSystemPro.UI;
+﻿using Devdog.General;
+using System;
 
 namespace Devdog.QuestSystemPro
 {
-    public class TaskTimeRewardGiver : INamedRewardGiver
+    public class TaskTimeRewardGiver : RewardGiverBase, INamedRewardGiver
     {
-        public string taskName;
         public float addTimeInSeconds;
 
-        public string name
+        public override string name
         {
             get { return "Task '" + taskName + "' time"; }
         }
 
-        public RewardRowUI rewardUIPrefab
+        public override void GiveRewards(Quest quest)
         {
-            get { return QuestManager.instance.settingsDatabase.defaultRewardRowUI; }
-        }
-
-        public ConditionInfo CanGiveRewards(Quest quest)
-        {
-            return ConditionInfo.success;
-        }
-
-        public void GiveRewards(Quest quest)
-        {
-            var task = quest.GetTask(taskName);
+            Task task = quest.GetTask(taskName);
             if (task == null)
             {
                 DevdogLogger.LogWarning("Task " + taskName + " not found on quest " + quest);
