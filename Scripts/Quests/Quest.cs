@@ -36,7 +36,7 @@ namespace Devdog.QuestSystemPro
 
         // Don't let Unity serialize, serialize using fullSerializer (handles polymorphic)
         [CustomSerialization]
-        private Task[] _tasks = new Task[0];
+        private Task[] _tasks = Array.Empty<Task>();
         public Task[] tasks
         {
             get { return _tasks; }
@@ -67,9 +67,8 @@ namespace Devdog.QuestSystemPro
         }
 
         [Header("Rewards")]
-        public IRewardGiver[] onActivationRewardGivers = new IRewardGiver[0];
-        public IRewardGiver[] rewardGivers = new IRewardGiver[0];
-
+        public IRewardGiver[] onActivationRewardGivers = Array.Empty<IRewardGiver>();
+        public IRewardGiver[] rewardGivers = Array.Empty<IRewardGiver>();
 
         //        [MinValue(1)]
         public int maxRepeatTimes = 1;
@@ -100,9 +99,9 @@ namespace Devdog.QuestSystemPro
         }
 
         [Header("Conditions")]
-        public Asset<Quest>[] requiresFinishedQuests = new Asset<Quest>[0];
-        public Asset<Quest>[] requiresOnQuests = new Asset<Quest>[0];
-        public IQuestCondition[] conditions = new IQuestCondition[0];
+        public Asset<Quest>[] requiresFinishedQuests = Array.Empty<Asset<Quest>>();
+        public Asset<Quest>[] requiresOnQuests = Array.Empty<Asset<Quest>>();
+        public IQuestCondition[] conditions = Array.Empty<IQuestCondition>();
 
         [Required]
         public IQuestTimeHandler timeHandler = new QuestTimeHandler();
@@ -390,7 +389,6 @@ namespace Devdog.QuestSystemPro
                     return new ConditionInfo(false, QuestManager.instance.languageDatabase.canNotAcceptQuestRequiresCompletedQuest);
                 }
             }
-
 
             if (!CanRepeat())
             {
