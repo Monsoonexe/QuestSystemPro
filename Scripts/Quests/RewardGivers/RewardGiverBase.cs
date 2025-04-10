@@ -19,5 +19,7 @@ namespace Devdog.QuestSystemPro
         }
 
         public abstract void GiveRewards(Quest quest);
+
+        public override string ToString() => name;
     }
 }
