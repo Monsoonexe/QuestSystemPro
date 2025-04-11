@@ -6,7 +6,7 @@ namespace Devdog.QuestSystemPro.Dialogue
     public abstract class SimpleQuestEdgeConditionBase : SimpleEdgeCondition
     {
         [Required]
-        public Asset<Quest>[] quests = new Asset<Quest>[0];
+        public Asset<Quest>[] quests = System.Array.Empty<Asset<Quest>>();
 
         public override ValidationInfo Validate(Dialogue dialogue)
         {
@@ -21,7 +21,7 @@ namespace Devdog.QuestSystemPro.Dialogue
         public override string FormattedString()
         {
             string questIDs = "";
-            foreach (var quest in quests)
+            foreach (Asset<Quest> quest in quests)
             {
                 if (quest.val == null)
                 {

@@ -6,7 +6,7 @@ namespace Devdog.QuestSystemPro.Dialogue
     public abstract class SimpleAchievementEdgeConditionBase : SimpleEdgeCondition
     {
         [Required]
-        public Asset<Achievement>[] achievements = new Asset<Achievement>[0];
+        public Asset<Achievement>[] achievements = System.Array.Empty<Asset<Achievement>>();
 
         public override ValidationInfo Validate(Dialogue dialogue)
         {

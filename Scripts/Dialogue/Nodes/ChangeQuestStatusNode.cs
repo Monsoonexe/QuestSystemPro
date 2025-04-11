@@ -9,15 +9,14 @@ namespace Devdog.QuestSystemPro.Dialogue
     {
         [ShowInNode]
         [Required]
-        public Asset<Quest>[] quests;
+        public Asset<Quest>[] quests = System.Array.Empty<Asset<Quest>>();
 
         [ShowInNode]
         public QuestStatusAction status;
 
-
         public override void OnExecute(IDialogueOwner dialogueOwner)
         {
-            foreach (var quest in quests)
+            foreach (Asset<Quest> quest in quests)
             {
                 quest.val.DoAction(status);
             }

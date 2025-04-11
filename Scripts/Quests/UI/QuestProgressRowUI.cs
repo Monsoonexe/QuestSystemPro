@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Devdog.General.UI;
+﻿using Devdog.General.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +11,7 @@ namespace Devdog.QuestSystemPro.UI
     public class QuestProgressRowUI : MonoBehaviour
     {
         [Header("Options")]
-//        public bool onlyShowActiveTasks = true;
+        //        public bool onlyShowActiveTasks = true;
         public bool showTaskRewards = true;
         public TaskFilter showTasksFilter = TaskFilter.Active;
 
@@ -21,10 +21,10 @@ namespace Devdog.QuestSystemPro.UI
         public RectTransform tasksContainer;
         public RectTransform rewardsContainer;
 
-//        [Header("Visuals & Audio")]
-//        public AnimationClip showAnimation;
-//        public AnimationClip hideAnimation;
-//        public AudioClip audioClip;
+        //        [Header("Visuals & Audio")]
+        //        public AnimationClip showAnimation;
+        //        public AnimationClip hideAnimation;
+        //        public AudioClip audioClip;
 
         protected Dictionary<Task, TaskProgressRowUI> taskUICache = new Dictionary<Task, TaskProgressRowUI>();
         protected Dictionary<IRewardGiver, RewardRowUI> rewardGiverUICache = new Dictionary<IRewardGiver, RewardRowUI>();
@@ -40,7 +40,7 @@ namespace Devdog.QuestSystemPro.UI
             if (title != null)
                 title.text = quest.name.message;
 
-            if(description != null)
+            if (description != null)
                 description.text = quest.description.message;
 
             QuestUIUtility.RepaintQuestUIRepaintableChildren(transform, quest);
@@ -58,24 +58,23 @@ namespace Devdog.QuestSystemPro.UI
                 return;
             }
 
-
             rewardsContainer.gameObject.SetActive(true);
 
             // TODO: Pool this.
-            foreach (var kvp in rewardGiverUICache)
+            foreach (KeyValuePair<IRewardGiver, RewardRowUI> kvp in rewardGiverUICache)
             {
                 Destroy(kvp.Value.gameObject);
             }
 
             rewardGiverUICache.Clear();
-            foreach (var rewardGiver in quest.rewardGivers)
+            foreach (IRewardGiver rewardGiver in quest.rewardGivers)
             {
                 if (rewardGiver.rewardUIPrefab == null)
                 {
                     continue;
                 }
 
-                var ui = CreateRewardRow(rewardGiver);
+                RewardRowUI ui = CreateRewardRow(rewardGiver);
                 ui.Repaint(rewardGiver, quest);
                 rewardGiverUICache.Add(rewardGiver, ui);
             }
@@ -84,22 +83,22 @@ namespace Devdog.QuestSystemPro.UI
         protected virtual void UpdateTaskProgressRowsUI(Quest quest)
         {
             // TODO: Pool this.
-            foreach (var taskRowUI in taskUICache)
+            foreach (KeyValuePair<Task, TaskProgressRowUI> taskRowUI in taskUICache)
             {
                 Destroy(taskRowUI.Value.gameObject);
             }
 
             taskUICache.Clear();
 
-            var tasks = quest.GetTasks(showTasksFilter);
-            foreach (var activeTask in tasks)
+            IEnumerable<Task> tasks = quest.GetTasks(showTasksFilter);
+            foreach (Task activeTask in tasks)
             {
                 if (activeTask.taskUIPrefab == null)
                 {
                     continue;
                 }
 
-                var ui = CreateTaskRowUI(activeTask);
+                TaskProgressRowUI ui = CreateTaskRowUI(activeTask);
                 ui.Repaint(activeTask);
                 taskUICache.Add(activeTask, ui);
             }
@@ -107,7 +106,7 @@ namespace Devdog.QuestSystemPro.UI
 
         protected virtual TaskProgressRowUI CreateTaskRowUI(Task task)
         {
-            var inst = Instantiate<TaskProgressRowUI>(task.taskUIPrefab);
+            TaskProgressRowUI inst = Instantiate(task.taskUIPrefab);
             inst.transform.SetParent(tasksContainer);
             UIUtility.ResetTransform(inst.transform);
 
@@ -116,7 +115,7 @@ namespace Devdog.QuestSystemPro.UI
 
         protected virtual RewardRowUI CreateRewardRow(IRewardGiver rewardGiver)
         {
-            var inst = Instantiate<RewardRowUI>(rewardGiver.rewardUIPrefab);
+            RewardRowUI inst = Instantiate(rewardGiver.rewardUIPrefab);
             inst.transform.SetParent(rewardsContainer);
             UIUtility.ResetTransform(inst.transform);
 

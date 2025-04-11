@@ -1,4 +1,4 @@
-using Devdog.General;
+﻿using Devdog.General;
 using Devdog.General.Localization;
 using Devdog.General.ThirdParty.UniLinq;
 using System;
@@ -306,32 +306,32 @@ namespace Devdog.QuestSystemPro
             //            DevdogLogger.LogVerbose("Couldn't find quest task with name " + key + " on quest with ID #" + ID);
         }
 
-        public List<Task> GetFailedTasks()
+        public IEnumerable<Task> GetFailedTasks()
         {
-            return tasks.Where(task => task.status == TaskStatus.Failed).ToList();
+            return tasks.Where(task => task.status == TaskStatus.Failed);
         }
 
-        public List<Task> GetInActiveTasks()
+        public IEnumerable<Task> GetInActiveTasks()
         {
-            return tasks.Where(task => task.status == TaskStatus.InActive).ToList();
+            return tasks.Where(task => task.status == TaskStatus.InActive);
         }
 
-        public List<Task> GetActiveTasks()
+        public IEnumerable<Task> GetActiveTasks()
         {
-            return tasks.Where(task => task.status == TaskStatus.Active).ToList();
+            return tasks.Where(task => task.status == TaskStatus.Active);
         }
 
-        public List<Task> GetActiveAndCompletedTasks()
+        public IEnumerable<Task> GetActiveAndCompletedTasks()
         {
-            return tasks.Where(task => task.status == TaskStatus.Active || task.status == TaskStatus.Completed).ToList();
+            return tasks.Where(task => task.status == TaskStatus.Active || task.status == TaskStatus.Completed);
         }
 
-        public List<Task> GetCompletedTasks()
+        public IEnumerable<Task> GetCompletedTasks()
         {
-            return tasks.Where(task => task.status == TaskStatus.Completed).ToList();
+            return tasks.Where(task => task.status == TaskStatus.Completed);
         }
 
-        public List<Task> GetTasks(TaskFilter filter)
+        public IEnumerable<Task> GetTasks(TaskFilter filter)
         {
             switch (filter)
             {
