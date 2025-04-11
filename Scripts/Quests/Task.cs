@@ -6,9 +6,11 @@ using UnityEngine;
 
 namespace Devdog.QuestSystemPro
 {
-    [System.Serializable]
+    [Serializable]
     public partial class Task
     {
+        public const int InvalidTimerId = -1;
+
         public delegate void ReachedTimeLimit(Task task);
         public delegate void StatusChanged(TaskStatus before, TaskStatus after, Task self);
         public delegate void ProgressChanged(float before, Task task);
@@ -85,7 +87,7 @@ namespace Devdog.QuestSystemPro
         }
 
         [NonSerialized]
-        protected int timerID = -1;
+        protected int timerID = InvalidTimerId;
 
         [NonSerialized]
         private DateTime? _startTime;
@@ -233,12 +235,12 @@ namespace Devdog.QuestSystemPro
         {
             startTime = null;
 
-            if (timerID != -1)
+            if (timerID != InvalidTimerId)
             {
                 NotifyTimerStopped();
                 timer.StopTimer(timerID);
 
-                timerID = -1;
+                timerID = InvalidTimerId;
             }
         }
 
