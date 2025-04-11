@@ -1,4 +1,4 @@
-﻿using Devdog.General;
+using Devdog.General;
 using Devdog.General.Localization;
 using Devdog.General.ThirdParty.UniLinq;
 using System;
@@ -99,8 +99,6 @@ namespace Devdog.QuestSystemPro
         }
 
         [Header("Conditions")]
-        public Asset<Quest>[] requiresFinishedQuests = Array.Empty<Asset<Quest>>();
-        public Asset<Quest>[] requiresOnQuests = Array.Empty<Asset<Quest>>();
         public IQuestCondition[] conditions = Array.Empty<IQuestCondition>();
 
         [Required]
@@ -367,29 +365,6 @@ namespace Devdog.QuestSystemPro
 
         public ConditionInfo CanActivate()
         {
-
-            foreach (Asset<Quest> quest in requiresOnQuests)
-            {
-                if (quest.val == null)
-                    continue;
-
-                if (QuestManager.instance.HasActiveQuest(quest.val) == false)
-                {
-                    return new ConditionInfo(false, QuestManager.instance.languageDatabase.canNotAcceptQuestRequiresCompletedQuest);
-                }
-            }
-
-            foreach (Asset<Quest> quest in requiresFinishedQuests)
-            {
-                if (quest.val == null)
-                    continue;
-
-                if (QuestManager.instance.HasCompletedQuest(quest.val) == false)
-                {
-                    return new ConditionInfo(false, QuestManager.instance.languageDatabase.canNotAcceptQuestRequiresCompletedQuest);
-                }
-            }
-
             if (!CanRepeat())
             {
                 return new ConditionInfo(false, QuestManager.instance.languageDatabase.canNotAcceptQuestReachedMaxRepeatTimes);
