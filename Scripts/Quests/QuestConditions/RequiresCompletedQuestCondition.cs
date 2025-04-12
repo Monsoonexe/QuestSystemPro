@@ -2,17 +2,14 @@
 
 namespace Devdog.QuestSystemPro
 {
-    public class RequiresCompletedQuestCondition : IQuestCondition
+    /// <summary>
+    /// Requires a quest to be completed in order to activate, cancel, complete, decline or discover this quest.
+    /// </summary>
+    public class RequiresCompletedQuestCondition : BasicQuestCondition, IQuestCondition
     {
         public Asset<Quest> requiredQuest;
 
-        public bool toActivate;
-        public bool toCancel;
-        public bool toComplete;
-        public bool toDecline;
-        public bool toDiscover;
-
-        public ConditionInfo Check()
+        public override ConditionInfo Check()
         {
             if (!QuestManager.instance.HasCompletedQuest(requiredQuest.val))
             {
@@ -20,31 +17,6 @@ namespace Devdog.QuestSystemPro
             }
 
             return ConditionInfo.success;
-        }
-
-        public ConditionInfo CanActivateQuest(Quest quest)
-        {
-            return toActivate ? Check() : ConditionInfo.success;
-        }
-
-        public ConditionInfo CanCancelQuest(Quest quest)
-        {
-            return toCancel ? Check() : ConditionInfo.success;
-        }
-
-        public ConditionInfo CanCompleteQuest(Quest quest)
-        {
-            return toComplete ? Check() : ConditionInfo.success;
-        }
-
-        public ConditionInfo CanDeclineQuest(Quest quest)
-        {
-            return toDecline ? Check() : ConditionInfo.success;
-        }
-
-        public ConditionInfo CanDiscoverQuest(Quest quest)
-        {
-            return toDiscover ? Check() : ConditionInfo.success;
         }
     }
 }
