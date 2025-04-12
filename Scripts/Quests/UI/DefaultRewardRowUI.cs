@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 namespace Devdog.QuestSystemPro.UI
 {
+    /// <summary>
+    /// Example
+    /// </summary>
     public class DefaultRewardRowUI : RewardRowUI
     {
         [Header("UI References")]
@@ -12,11 +14,9 @@ namespace Devdog.QuestSystemPro.UI
 
         public override void Repaint(IRewardGiver rewardGiver, Quest quest)
         {
-            Assert.IsTrue(rewardGiver is INamedRewardGiver, "To use the default rewardRowUI the rewardGiver MUST be of type INamedRewardGiver - " + rewardGiver.GetType().Name + " given.");
+            string named = rewardGiver is INamedRewardGiver nReward ? nReward.name : rewardGiver.ToString();
 
-            var named = (INamedRewardGiver) rewardGiver;
-
-            key.text = named.name;
+            key.text = named;
             val.text = named.ToString();
         }
     }

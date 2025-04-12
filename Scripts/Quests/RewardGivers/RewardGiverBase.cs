@@ -2,16 +2,14 @@
 
 namespace Devdog.QuestSystemPro
 {
-    public abstract class RewardGiverBase : INamedRewardGiver
+    public abstract class RewardGiverBase : IRewardGiver
     {
-        public string taskName;
-
-        public virtual RewardRowUI rewardUIPrefab
+        public static RewardRowUI defaultRewardUIPrefab
         {
             get { return QuestManager.instance.settingsDatabase.defaultRewardRowUI; }
         }
 
-        public abstract string name { get; }
+        public virtual RewardRowUI rewardUIPrefab => defaultRewardUIPrefab;
 
         public virtual ConditionInfo CanGiveRewards(Quest quest)
         {
@@ -19,7 +17,5 @@ namespace Devdog.QuestSystemPro
         }
 
         public abstract void GiveRewards(Quest quest);
-
-        public override string ToString() => name;
     }
 }

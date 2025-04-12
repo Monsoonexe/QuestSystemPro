@@ -6,10 +6,11 @@ namespace Devdog.QuestSystemPro
     public class TaskTimeRewardGiver : RewardGiverBase, INamedRewardGiver
     {
         public float addTimeInSeconds;
+        public string taskName;
 
-        public override string name
+        public string name
         {
-            get { return "Task '" + taskName + "' time"; }
+            get { return $"Task '{taskName}' time"; }
         }
 
         public override void GiveRewards(Quest quest)
