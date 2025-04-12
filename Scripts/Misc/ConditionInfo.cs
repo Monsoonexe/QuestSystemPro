@@ -17,6 +17,12 @@ namespace Devdog.QuestSystemPro
             }
         }
 
+        public ConditionInfo(bool conditionStatus, string message)
+            : this(conditionStatus, new MultiLangString(message, message), Array.Empty<object>())
+        {
+
+        }
+
         public ConditionInfo(bool conditionStatus, MultiLangString? conditionMessage = null)
             : this(conditionStatus, conditionMessage, Array.Empty<object>())
         { }

@@ -112,9 +112,12 @@ namespace Devdog.QuestSystemPro
 
         protected virtual void Init()
         {
+            Assert.IsNull(_instance, "Singleton error");
             Assert.IsNotNull(languageDatabase, "Language database is not set on QuestManager! This is required.");
             Assert.IsNotNull(settingsDatabase, "Settings database is not set on QuestManager! This is required.");
             Assert.IsNotNull(questDatabase, "Quest database is not set on QuestManager! This is required.");
+
+            _instance = this;
 
             foreach (Quest t in quests)
             {

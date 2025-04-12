@@ -564,6 +564,9 @@ namespace Devdog.QuestSystemPro
             }
         }
 
+        /// <summary>
+        /// Quests cannot be completed if their rewards cannot be given.
+        /// </summary>
         public ConditionInfo CanGiveRewards()
         {
             foreach (IRewardGiver rewardGiver in rewardGivers)
@@ -632,7 +635,6 @@ namespace Devdog.QuestSystemPro
 
             status = QuestStatus.Cancelled;
             CancelAllTasks();
-            //            ResetProgress();
 
             return true;
         }
