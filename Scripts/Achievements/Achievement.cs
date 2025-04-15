@@ -15,68 +15,60 @@ namespace Devdog.QuestSystemPro
         public new event Achievement.TaskProgressChanged OnTaskProgressChanged;
         public new event Achievement.TaskStatusChanged OnTaskStatusChanged;
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            OnStatusChanged = null;
+            OnTaskReachedTimeLimit = null;
+            OnTaskStatusChanged = null;
+            OnTaskProgressChanged = null;
+        }
 
-        public new static Achievement Create(int id = 0)
+        public static new Achievement Create(int id = 0)
         {
             return Create(QuestManager.instance.localIdentifier, id);
         }
 
-        public new static Achievement Create(ILocalIdentifier localIdentifier, int id = 0)
+        public static new Achievement Create(ILocalIdentifier localIdentifier, int id = 0)
         {
-            var achievement = CreateInstance<Achievement>();
+            Achievement achievement = CreateInstance<Achievement>();
             achievement.ID = id;
             achievement.localIdentifier = localIdentifier;
 
             return achievement;
         }
 
-
-
-
-
         #region Notifies
 
         protected override void DoNotifyReachedTimeLimit(Task task)
         {
+            base.DoNotifyReachedTimeLimit(task);
             QuestManager.instance.NotifyAchievementTaskReachedTimeLimit(task, this);
-            if (OnTaskReachedTimeLimit != null)
-            {
-                OnTaskReachedTimeLimit(task, this);
-            }
+            OnTaskReachedTimeLimit?.Invoke(task, this);
         }
 
         protected override void DoNotifyTaskProgressChanged(float before, Task task)
         {
+            base.DoNotifyTaskProgressChanged(before, task);
             QuestManager.instance.NotifyAchievementTaskProgressChanged(before, task, this);
-            if (OnTaskProgressChanged != null)
-            {
-                OnTaskProgressChanged(before, task, this);
-            }
+            OnTaskProgressChanged?.Invoke(before, task, this);
         }
 
         protected override void DoNotifyTaskStatusChanged(TaskStatus before, TaskStatus after, Task task)
         {
+            base.DoNotifyTaskStatusChanged(before, after, task);
             QuestManager.instance.NotifyAchievementTaskStatusChanged(before, after, task, this);
-            if (OnTaskStatusChanged != null)
-            {
-                OnTaskStatusChanged(before, task, this);
-            }
+            OnTaskStatusChanged?.Invoke(before, task, this);
         }
 
         protected override void DoNotifyQuestStatusChanged(QuestStatus before)
         {
+            base.DoNotifyQuestStatusChanged(before);
             QuestManager.instance.NotifyAchievementStatusChanged(before, this);
-            if (OnStatusChanged != null)
-            {
-                OnStatusChanged(before, this);
-            }
+            OnStatusChanged?.Invoke(before, this);
         }
 
         #endregion
-
-
-
-
 
         /// <summary>
         /// Achievements become active auto. when you set it's progress.

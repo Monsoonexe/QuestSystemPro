@@ -114,6 +114,14 @@ namespace Devdog.QuestSystemPro
             : base()
         { }
 
+        protected virtual void OnDestroy()
+        {
+            OnStatusChanged = null;
+            OnTaskReachedTimeLimit = null;
+            OnTaskStatusChanged = null;
+            OnTaskProgressChanged = null;
+        }
+
         public static Quest Create(int id = 0)
         {
             return Create(QuestManager.instance.localIdentifier, id);
