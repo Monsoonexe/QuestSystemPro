@@ -48,7 +48,7 @@ namespace Devdog.QuestSystemPro
 
         /// <summary>
         /// Auto complete this task when there's enough progress to do so.
-        /// When false SetCompleted() has to be called manually.
+        /// When false, <see cref="Complete(bool)"/> has to be called manually.
         /// </summary>
         public bool autoComplete = false;
 
@@ -103,7 +103,7 @@ namespace Devdog.QuestSystemPro
         public TaskRequirement requirement = TaskRequirement.Required;
         public bool giveRewardsOnTaskComplete = false;
 
-        public IRewardGiver[] rewardGivers = new IRewardGiver[0];
+        public IRewardGiver[] rewardGivers = Array.Empty<IRewardGiver>();
 
         [NonSerialized]
         private TaskStatus _status = TaskStatus.InActive;
@@ -152,19 +152,13 @@ namespace Devdog.QuestSystemPro
         [IgnoreCustomSerialization]
         public virtual Quest owner { get; set; }
 
-        //        [Obsolete("Use other constructors instead.")]
         public Task()
         { }
 
         public Task(string key, float progressCap)
-            : this(key, progressCap, null)
-        { }
-
-        public Task(string key, float progressCap, params IRewardGiver[] rewardGivers)
         {
             this.key = key;
             this.progressCap = progressCap;
-            this.rewardGivers = rewardGivers ?? new IRewardGiver[0];
         }
 
         public bool ChangeProgress(float amount)
@@ -305,7 +299,11 @@ namespace Devdog.QuestSystemPro
                 GiveRewards();
             }
 
-            DevdogLogger.LogVerbose("Completed task: \"" + key + "\" on " + owner.GetType().Name + " \"" + owner.name + "\"");
+            if (DevdogLogger.VerboseEnabled)
+            {
+                Debug.Log("Completed task: \"" + key + "\" on " + owner.GetType().Name + " \"" + owner.name + "\"");
+            }
+
             return isCompleted;
         }
 

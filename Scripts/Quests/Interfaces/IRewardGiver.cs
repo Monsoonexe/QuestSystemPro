@@ -8,6 +8,8 @@ namespace Devdog.QuestSystemPro
 
         /// <remarks>i.e. will it fit?</remarks>
         ConditionInfo CanGiveRewards(Quest quest);
+
+        /// <param name="quest">The soure of the rewards.</param>
         void GiveRewards(Quest quest);
     }
 }

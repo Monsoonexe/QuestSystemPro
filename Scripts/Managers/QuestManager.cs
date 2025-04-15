@@ -38,6 +38,9 @@ namespace Devdog.QuestSystemPro
         [NonSerialized]
         protected Dictionary<ILocalIdentifier, QuestsContainer> questStates = new Dictionary<ILocalIdentifier, QuestsContainer>();
 
+        /// <summary>
+        /// Assets
+        /// </summary>
         public Quest[] quests
         {
             get
@@ -54,6 +57,9 @@ namespace Devdog.QuestSystemPro
             }
         }
 
+        /// <summary>
+        /// Assets
+        /// </summary>
         public Achievement[] achievements
         {
             get
